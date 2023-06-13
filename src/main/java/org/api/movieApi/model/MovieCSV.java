@@ -12,13 +12,13 @@ import lombok.NoArgsConstructor;
 public class MovieCSV {
 
     @CsvBindByName
-    private boolean adult;
+    private Boolean adult;
 
     @CsvBindByName(column = "belongs_to_collection")
     private String belongsToCollection;
 
     @CsvBindByName
-    private int budget;
+    private Integer budget;
 
     @CsvBindByName
     private String genres;
@@ -27,7 +27,7 @@ public class MovieCSV {
     private String homepage;
 
     @CsvBindByName
-    private int id;
+    private Integer id;
 
     @CsvBindByName(column = "imdb_id")
     private String imdbId;
@@ -42,7 +42,7 @@ public class MovieCSV {
     private String overview;
 
     @CsvBindByName
-    private double popularity;
+    private Double popularity;
 
     @CsvBindByName(column = "poster_path")
     private String posterPath;
@@ -57,10 +57,10 @@ public class MovieCSV {
     private String releaseDate;
 
     @CsvBindByName
-    private long revenue;
+    private Long revenue;
 
     @CsvBindByName
-    private double runtime;
+    private Double runtime;
 
     @CsvBindByName(column = "spoken_languages")
     private String spokenLanguages;
@@ -75,11 +75,11 @@ public class MovieCSV {
     private String title;
 
     @CsvBindByName
-    private boolean video;
+    private Boolean video;
 
     @CsvBindByName(column = "vote_average")
-    private double voteAverage;
+    private Double voteAverage;
 
     @CsvBindByName(column = "vote_count")
-    private int voteCount;
+    private Integer voteCount;
 }

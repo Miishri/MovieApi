@@ -28,23 +28,23 @@ public class Movie {
 
     private String releaseDate;
 
-    private double runtime;
+    private Double runtime;
 
     private String originalLanguage;
 
     private String spokenLanguages;
 
-    private double popularity;
+    private Double popularity;
 
     private String status;
 
-    private double voteAverage;
+    private Double voteAverage;
 
-    private int voteCount;
+    private Integer voteCount;
 
-    private int budget;
+    private Integer budget;
 
-    private long revenue;
+    private Long revenue;
 
     private String homepage;
 
@@ -54,8 +54,8 @@ public class Movie {
 
     private String productionCountries;
 
-    private boolean video;
+    private Boolean video;
 
-    private boolean adult;
+    private Boolean adult;
 
 }
