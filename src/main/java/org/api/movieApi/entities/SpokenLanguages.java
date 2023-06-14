@@ -19,4 +19,8 @@ public class SpokenLanguages {
     private String iso;
 
     private String language;
+
+    @ManyToOne
+    @JoinColumn(name = "movie_id")
+    private Movie movie;
 }

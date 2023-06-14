@@ -20,4 +20,8 @@ public class ProductionCountries {
     private String iso;
 
     private String countryName;
+
+    @ManyToOne
+    @JoinColumn(name = "movie_id")
+    private Movie movie;
 }
