@@ -1,9 +1,6 @@
 package org.api.movieApi.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -22,8 +19,10 @@ public class Movie {
 
     private String originalTitle;
 
+    @Column(length = 1000)
     private String overview;
 
+    @Column(length = 1000)
     private String genres;
 
     private String releaseDate;
@@ -32,6 +31,7 @@ public class Movie {
 
     private String originalLanguage;
 
+    @Column(length = 2500)
     private String spokenLanguages;
 
     private Double popularity;
@@ -50,8 +50,10 @@ public class Movie {
 
     private String imdbId;
 
+    @Column(length = 2500)
     private String productionCompanies;
 
+    @Column(length = 2500)
     private String productionCountries;
 
     private Boolean video;
