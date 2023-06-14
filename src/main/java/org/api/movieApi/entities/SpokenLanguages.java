@@ -15,9 +15,6 @@ public class SpokenLanguages {
     @Id
     private Long id;
 
-    @Column(name = "iso_3166_1")
-    private String iso;
-
     private String language;
 
     @ManyToOne
