@@ -42,7 +42,7 @@ public class MovieController {
         Movie savedMovie = movieService.saveNewMovie(movie);
 
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("IMDB_ID", PATH + "/" + savedMovie.getImdbId());
+        httpHeaders.add("Location", PATH + "/" + savedMovie.getId());
 
         return new ResponseEntity(httpHeaders, HttpStatus.CREATED);
     }
