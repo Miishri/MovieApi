@@ -3,19 +3,17 @@ package org.api.movieApi.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Set;
-
 @Entity
 @Builder
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "movie")
 public class Movie {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "movie_id")
     private Long id;
 
     private String title;
@@ -25,17 +23,14 @@ public class Movie {
     @Column(length = 1000)
     private String overview;
 
-    @OneToMany(mappedBy = "movie")
-    private Set<Genre> genres;
+    @Column(length = 1500)
+    private String genres;
 
     private String releaseDate;
 
     private Double runtime;
 
     private String originalLanguage;
-
-    @OneToMany(mappedBy = "movie")
-    private Set<SpokenLanguages> spokenLanguages;
 
     private Double popularity;
 
@@ -53,11 +48,8 @@ public class Movie {
 
     private String imdbId;
 
-    @OneToMany(mappedBy = "movie")
-    private Set<ProductionCompanies> productionCompanies;
-
-    @OneToMany(mappedBy = "movie")
-    private Set<ProductionCountries> productionCountries;
+    @Column(length = 1500)
+    private String productionCompanies;
 
     private Boolean video;
 
