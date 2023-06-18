@@ -2,7 +2,7 @@ package org.api.movieApi.services;
 
 import lombok.RequiredArgsConstructor;
 import org.api.movieApi.entities.Movie;
-import org.api.movieApi.repository.*;
+import org.api.movieApi.repository.MovieRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -17,10 +17,6 @@ import java.util.concurrent.atomic.AtomicReference;
 public class MovieServiceJPA implements MovieService {
 
     private final MovieRepository movieRepository;
-    private final GenreRepository genreRepository;
-    private final ProductionCompaniesRepository companiesRepository;
-    private final ProductionCountriesRepository countriesRepository;
-    private final SpokenLanguagesRepository spokenLanguagesRepository;
     public static final int DEFAULT_PAGE = 0;
     public static final int DEFAULT_PAGE_SIZE = 100;
     @Override
@@ -98,23 +94,10 @@ public class MovieServiceJPA implements MovieService {
             foundMovie.setTitle(movie.getTitle());
             foundMovie.setOriginalTitle(movie.getOriginalTitle());
             foundMovie.setOverview(movie.getOverview());
-
             foundMovie.setGenres(movie.getGenres());
-            foundMovie.getGenres().forEach(genre -> {
-                genre.setMovie(foundMovie);
-                genreRepository.save(genre);
-            });
-
             foundMovie.setReleaseDate(movie.getReleaseDate());
             foundMovie.setRuntime(movie.getRuntime());
             foundMovie.setOriginalLanguage(movie.getOriginalLanguage());
-
-            foundMovie.setSpokenLanguages(movie.getSpokenLanguages());
-            foundMovie.getSpokenLanguages().forEach(spoken -> {
-                spoken.setMovie(foundMovie);
-                spokenLanguagesRepository.save(spoken);
-            });
-
             foundMovie.setPopularity(movie.getPopularity());
             foundMovie.setStatus(movie.getStatus());
             foundMovie.setVoteAverage(movie.getVoteAverage());
@@ -123,19 +106,7 @@ public class MovieServiceJPA implements MovieService {
             foundMovie.setRevenue(movie.getRevenue());
             foundMovie.setHomepage(movie.getHomepage());
             foundMovie.setImdbId(movie.getImdbId());
-
             foundMovie.setProductionCompanies(movie.getProductionCompanies());
-            foundMovie.getProductionCompanies().forEach(production -> {
-                production.setMovie(foundMovie);
-                companiesRepository.save(production);
-            });
-
-            foundMovie.setProductionCountries(movie.getProductionCountries());
-            foundMovie.getProductionCountries().forEach(country -> {
-                country.setMovie(foundMovie);
-                countriesRepository.save(country);
-            });
-
             foundMovie.setVideo(movie.getVideo());
             foundMovie.setAdult(movie.getAdult());
 
