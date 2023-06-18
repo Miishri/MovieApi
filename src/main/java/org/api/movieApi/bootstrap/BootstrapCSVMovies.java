@@ -5,9 +5,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.api.movieApi.entities.*;
+import org.api.movieApi.entities.Movie;
 import org.api.movieApi.model.MovieCSV;
-import org.api.movieApi.repository.*;
+import org.api.movieApi.repository.MovieRepository;
 import org.api.movieApi.services.MovieCsvService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -16,9 +16,7 @@ import org.springframework.util.ResourceUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
@@ -26,11 +24,6 @@ public class BootstrapCSVMovies implements CommandLineRunner {
 
     private final MovieRepository movieRepository;
     private final MovieCsvService service;
-
-    private final GenreRepository genreRepository;
-    private final ProductionCountriesRepository countriesRepository;
-    private final ProductionCompaniesRepository companiesRepository;
-    private final SpokenLanguagesRepository languagesRepository;
     private ObjectMapper objectMapper;
     @Transactional
     @Override
@@ -64,12 +57,10 @@ public class BootstrapCSVMovies implements CommandLineRunner {
                         .adult(movieCSV.getAdult())
                         .build();
 
-                movie.setGenres(jsonGenreToPojo(movieCSV.getGenres(), movie));
-                movie.setSpokenLanguages(jsonLanguageToPojo(movieCSV.getSpokenLanguages(), movie));
-                movie.setProductionCompanies(jsonCompanyToPojo(movieCSV.getProductionCompanies(), movie));
-                movie.setProductionCountries(jsonCountryToPojo(movieCSV.getProductionCountries(), movie));
-
+                movie.setProductionCompanies(jsonProductionCompanyToString(movieCSV.getProductionCompanies()));
+                movie.setGenres(jsonGenreToPojo(movieCSV.getGenres()));
                 movieRepository.save(movie);
+
             });
 
             System.out.println("BOOTSTRAPPING DATA SUCCESSFUL");
@@ -77,93 +68,32 @@ public class BootstrapCSVMovies implements CommandLineRunner {
         }
     }
 
-    public Set<ProductionCompanies> jsonCompanyToPojo(String companiesJson, Movie movie) {
-        objectMapper = new ObjectMapper();
-        objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
-
-        try {
-            JsonNode jsonNode = objectMapper.readTree(companiesJson);
-            Set<ProductionCompanies> productionCompaniesSet = new HashSet<>();
-            for (JsonNode companyNode : jsonNode) {
-                ProductionCompanies productionCompany = ProductionCompanies.builder()
-                        .companyName(companyNode.get("name").asText())
-                        .movie(movie)
-                        .build();
-                productionCompaniesSet.add(productionCompany);
-                companiesRepository.save(productionCompany);
-            }
-
-            return productionCompaniesSet;
-
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+    public String jsonProductionCompanyToString(String companyJson) {
+        return getString(companyJson);
     }
 
-    public Set<ProductionCountries> jsonCountryToPojo(String countriesJson, Movie movie) {
-        objectMapper = new ObjectMapper();
-        objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
-
-        try {
-            JsonNode jsonNode = objectMapper.readTree(countriesJson);
-            Set<ProductionCountries> productionCountriesSet = new HashSet<>();
-            for (JsonNode countryNode : jsonNode) {
-                ProductionCountries productionCountry = ProductionCountries.builder()
-                        .countryName(countryNode.get("name").asText())
-                        .iso(countryNode.get("iso_3166_1").asText())
-                        .movie(movie)
-                        .build();
-                productionCountriesSet.add(productionCountry);
-                countriesRepository.save(productionCountry);
-            }
-
-            return productionCountriesSet;
-
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+    public String jsonGenreToPojo(String genreJson) {
+        return getString(genreJson);
     }
 
-    public Set<Genre> jsonGenreToPojo(String genreJson, Movie movie) {
+    private String getString(String genreJson) {
         objectMapper = new ObjectMapper();
         objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
 
         try {
             JsonNode jsonNode = objectMapper.readTree(genreJson);
-            Set<Genre> genreSet = new HashSet<>();
+            StringBuilder genre = new StringBuilder();
             for (JsonNode genreNode : jsonNode) {
-                Genre genre = Genre.builder()
-                        .genreName(genreNode.get("name").asText())
-                        .movie(movie)
-                        .build();
-                genreSet.add(genre);
-                genreRepository.save(genre);
+                genre.append(genreNode.get("name").asText());
+                genre.append(",");
+            }
+            if (!genre.isEmpty()) {
+                genre.delete(genre.length()-1, genre.length());
+            }else {
+                genre.append("None");
             }
 
-            return genreSet;
-
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public Set<SpokenLanguages> jsonLanguageToPojo(String languageJson, Movie movie) {
-        objectMapper = new ObjectMapper();
-        objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
-
-        try {
-            JsonNode jsonNode = objectMapper.readTree(languageJson);
-            Set<SpokenLanguages> spokenLanguagesSet = new HashSet<>();
-            for (JsonNode genreNode : jsonNode) {
-                SpokenLanguages spokenLanguage = SpokenLanguages.builder()
-                        .language(genreNode.get("name").asText())
-                        .movie(movie)
-                        .build();
-                spokenLanguagesSet.add(spokenLanguage);
-                languagesRepository.save(spokenLanguage);
-            }
-
-            return spokenLanguagesSet;
+            return genre.toString();
 
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
