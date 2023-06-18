@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 class MovieControllerIT {
@@ -46,6 +47,12 @@ class MovieControllerIT {
         assertThat(foundMovie).isNotNull();
     }
 
+    @Test
+    void testGetMovieByIdNotFound() {
+        assertThrows(NotFoundException.class, () -> {
+            movieController.getMovieById(999999999L);
+        });
+    }
     @Test
     void listMovies() {
         Page<Movie> movieList = movieController.listMovies(null, null, null,
@@ -90,6 +97,13 @@ class MovieControllerIT {
     }
 
     @Test
+    void testUpdateMovieByIdNotFound() {
+        assertThrows(NotFoundException.class, () -> {
+           movieController.updateMovieById(999999999L, Movie.builder().build());
+        });
+    }
+
+    @Test
     @Transactional
     @Rollback
     void deleteMovieById() {
@@ -99,5 +113,12 @@ class MovieControllerIT {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
 
         assertThat(movieRepository.findById(movie.getId())).isEmpty();
+    }
+
+    @Test
+    void testDeleteMovieByIdNotFound() {
+        assertThrows(NotFoundException.class, () -> {
+            movieController.deleteMovieById(999999999L);
+        });
     }
 }
