@@ -2,13 +2,13 @@ package org.api.movieApi.services;
 
 
 import org.api.movieApi.entities.Movie;
-import org.springframework.data.domain.Page;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface MovieService {
 
-    Page<Movie> listMovies(String movieTitle, Double runtime, String originalLanguage, String genre, Boolean adult, Integer pageNumber, Integer pageSize);
+    List<Movie> listMovies(String movieTitle, Double runtime, String originalLanguage, String genre, Boolean adult);
 
     Optional<Movie> getMovieById(Long id);
 

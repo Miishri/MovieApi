@@ -4,11 +4,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.api.movieApi.entities.Movie;
 import org.api.movieApi.services.MovieService;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -26,15 +27,13 @@ public class MovieController {
     }
 
     @GetMapping(value = PATH)
-    public Page<Movie> listMovies(@RequestParam(required = false) String movieTitle,
+    public List<Movie> listMovies(@RequestParam(required = false) String title,
                                   @RequestParam(required = false) Double runtime,
-                                  @RequestParam(required = false) String originalLanguage,
+                                  @RequestParam(required = false) String language,
                                   @RequestParam(required = false) String genre,
-                                  @RequestParam(required = false) Boolean adult,
-                                  @RequestParam(required = false) Integer pageNumber,
-                                  @RequestParam(required = false) Integer pageSize) {
+                                  @RequestParam(required = false) Boolean adult) {
 
-        return movieService.listMovies(movieTitle, runtime, originalLanguage, genre, adult, pageNumber, pageSize);
+        return movieService.listMovies(title, runtime, language, genre, adult);
     }
 
     @PostMapping(value = PATH)

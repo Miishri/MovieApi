@@ -1,18 +1,17 @@
 package org.api.movieApi.repository;
 
 import org.api.movieApi.entities.Movie;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
 
 public interface MovieRepository extends JpaRepository<Movie, Long> {
 
-    Page<Movie> findAllByTitle(String title,
-                               Pageable pageable);
+    List<Movie> findAllByTitle(String title);
 
-    Page<Movie> findAllByRuntime(Double runtime, Pageable pageable);
+    List<Movie> findAllByRuntime(Double runtime);
 
-    Page<Movie> findAllByOriginalLanguage(String originalLanguage, Pageable pageable);
+    List<Movie> findAllByOriginalLanguage(String originalLanguage);
 
-    Page<Movie> findAllByAdult(Boolean adult, Pageable pageable);
+    List<Movie> findAllByAdult(Boolean adult);
 }

@@ -3,12 +3,10 @@ package org.api.movieApi.services;
 import lombok.RequiredArgsConstructor;
 import org.api.movieApi.entities.Movie;
 import org.api.movieApi.repository.MovieRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -20,58 +18,29 @@ public class MovieServiceJPA implements MovieService {
     public static final int DEFAULT_PAGE = 0;
     public static final int DEFAULT_PAGE_SIZE = 100;
     @Override
-    public Page<Movie> listMovies(String movieTitle,
+    public List<Movie> listMovies(String movieTitle,
                                   Double runtime,
-                                  String originalLanguage,
+                                  String language,
                                   String genre,
-                                  Boolean adult,
-                                  Integer pageNumber,
-                                  Integer pageSize) {
+                                  Boolean adult) {
 
-        PageRequest pageRequest = pageRequestBuilder(pageNumber, pageSize);
 
-        Page<Movie> moviePage;
+        List<Movie> moviePage;
 
         if (StringUtils.hasText(movieTitle)) {
-            moviePage = movieRepository.findAllByTitle(movieTitle, pageRequest);
+            moviePage = movieRepository.findAllByTitle(movieTitle);
         } else if (runtime != null) {
-            moviePage = movieRepository.findAllByRuntime(runtime, pageRequest);
-        } else if (StringUtils.hasText(originalLanguage)) {
-            moviePage = movieRepository.findAllByOriginalLanguage(originalLanguage, pageRequest);
+            moviePage = movieRepository.findAllByRuntime(runtime);
+        } else if (StringUtils.hasText(language)) {
+            moviePage = movieRepository.findAllByOriginalLanguage(language);
         } else if (adult != null) {
-            moviePage = movieRepository.findAllByAdult(adult, pageRequest);
+            moviePage = movieRepository.findAllByAdult(adult);
         } else {
-            moviePage = movieRepository.findAll(pageRequest);
+            moviePage = movieRepository.findAll();
         }
 
 
         return moviePage;
-    }
-
-    public PageRequest pageRequestBuilder(Integer pageNumber,
-                                          Integer pageSize) {
-        int pageQueryNumber;
-        int pageQuerySize;
-
-        if (pageNumber != null && pageNumber > 0) {
-            pageQueryNumber = pageNumber - 1;
-        } else {
-            pageQueryNumber = DEFAULT_PAGE;
-        }
-
-        if (pageSize == null) {
-            pageQuerySize = DEFAULT_PAGE_SIZE;
-        } else {
-            if (pageSize > 45462) {
-                pageQuerySize = 1000;
-            } else {
-                pageQuerySize = pageSize;
-            }
-        }
-
-        Sort sort = Sort.by(Sort.Order.asc("title"));
-
-        return PageRequest.of(pageQueryNumber, pageQuerySize, sort);
     }
 
     @Override
@@ -109,6 +78,8 @@ public class MovieServiceJPA implements MovieService {
             foundMovie.setProductionCompanies(movie.getProductionCompanies());
             foundMovie.setVideo(movie.getVideo());
             foundMovie.setAdult(movie.getAdult());
+
+            movieRepository.save(foundMovie);
 
             atomicMovie.set(Optional.of(foundMovie));
         }, () -> {
