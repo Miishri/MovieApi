@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.api.movieApi.entities.Movie;
 import org.api.movieApi.services.MovieService;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,10 +39,7 @@ public class MovieController {
     public ResponseEntity saveNewMovie(@RequestBody Movie movie) {
         Movie savedMovie = movieService.saveNewMovie(movie);
 
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("Location", PATH + "/" + savedMovie.getId());
-
-        return new ResponseEntity(httpHeaders, HttpStatus.CREATED);
+        return new ResponseEntity(HttpStatus.CREATED);
     }
 
     @PutMapping(value = ID_PATH)
