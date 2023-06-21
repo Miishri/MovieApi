@@ -9,6 +9,8 @@ import org.api.movieApi.entities.Movie;
 import org.api.movieApi.model.MovieCSV;
 import org.api.movieApi.repository.MovieRepository;
 import org.api.movieApi.services.MovieCsvService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,9 +27,12 @@ public class BootstrapCSVMovies implements CommandLineRunner {
     private final MovieRepository movieRepository;
     private final MovieCsvService service;
 
+    private Logger logger;
+
     @Transactional
     @Override
     public void run(String... args) throws Exception {
+        logger = LoggerFactory.getLogger(BootstrapCSVMovies.class);
         loadMoviesCsvData();
     }
 
@@ -38,6 +43,11 @@ public class BootstrapCSVMovies implements CommandLineRunner {
             List<MovieCSV> movieList = service.convertToMovieCsv(file);
 
             movieList.forEach(movieCSV -> {
+
+                if (movieCSV.getRuntime() == null) {
+                    movieCSV.setRuntime(0.0);
+                }
+
                 Movie movie = Movie.builder()
                         .title(movieCSV.getTitle())
                         .originalTitle(movieCSV.getOriginalTitle())
@@ -62,7 +72,7 @@ public class BootstrapCSVMovies implements CommandLineRunner {
 
             });
 
-            System.out.println("BOOTSTRAPPING DATA SUCCESSFUL");
+            logger.info("DATA WAS INSERTED INTO H2 DATABASE CORRECTLY");
 
         }
     }
