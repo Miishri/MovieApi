@@ -4,15 +4,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.api.movieApi.entities.Movie;
 import org.api.movieApi.services.MovieService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
 @RestController
+@RequestMapping("/api/movie")
 public class MovieController {
 
     public static final String PATH = "/api/movie";
@@ -21,43 +22,34 @@ public class MovieController {
     private final MovieService movieService;
 
     @GetMapping(value = ID_PATH)
-    public Movie getMovieById(@PathVariable("movieId") Long movieId) {
+    public Movie getMovieById(@PathVariable("movieId") Long movieId) throws HttpNotFoundException {
         return movieService.getMovieById(movieId).orElseThrow(HttpNotFoundException::new);
     }
 
-    @GetMapping(value = PATH)
-    public List<Movie> listMovies(@RequestParam(required = false) String title,
-                                  @RequestParam(required = false) Double runtime,
-                                  @RequestParam(required = false) String language,
-                                  @RequestParam(required = false) String genre,
-                                  @RequestParam(required = false) Boolean adult) {
-
-        return movieService.listMovies(title, runtime, language, genre, adult);
+    public List<Movie> listMovies() {
+        return movieService.listMovies();
     }
 
-    @PostMapping(value = PATH)
-    public ResponseEntity saveNewMovie(@RequestBody Movie movie) {
-        Movie savedMovie = movieService.saveNewMovie(movie);
-
-        return new ResponseEntity(HttpStatus.CREATED);
+    public Movie saveNewMovie(@RequestBody Movie movie) {
+        return movieService.saveNewMovie(movie);
     }
 
     @PutMapping(value = ID_PATH)
-    public ResponseEntity updateMovieById(@PathVariable("movieId") Long movieId, @RequestBody Movie movie) {
-        if (movieService.updateMovieById(movieId, movie).isEmpty()) {
+    public ResponseEntity<Movie> updateMovieById(@PathVariable("movieId") Long movieId, @RequestBody Movie movie) throws HttpNotFoundException {
+        Optional<Movie> foundMovie = movieService.updateMovieById(movieId, movie);
+
+        if (foundMovie.isEmpty()) {
             throw new HttpNotFoundException();
         }
 
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping(value = ID_PATH)
-    public ResponseEntity deleteMovieById(@PathVariable("movieId") Long movieId) {
-        if (! movieService.deleteById(movieId)) {
-            throw new HttpNotFoundException();
-        }
+    public ResponseEntity<Void> deleteMovieById(@PathVariable("movieId") Long movieId) throws HttpNotFoundException {
+        if (! movieService.deleteById(movieId)) throw new HttpNotFoundException();
 
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+        return ResponseEntity.noContent().build();
     }
 
 }

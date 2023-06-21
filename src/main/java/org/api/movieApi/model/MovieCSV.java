@@ -74,9 +74,6 @@ public class MovieCSV {
     @CsvBindByName
     private String title;
 
-    @CsvBindByName
-    private Boolean video;
-
     @CsvBindByName(column = "vote_average")
     private Double voteAverage;
 

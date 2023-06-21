@@ -1,14 +1,13 @@
 package org.api.movieApi.services;
 
 import lombok.RequiredArgsConstructor;
+import org.api.movieApi.controller.HttpNotFoundException;
 import org.api.movieApi.entities.Movie;
 import org.api.movieApi.repository.MovieRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
 
 @RequiredArgsConstructor
 @Service
@@ -17,19 +16,21 @@ public class MovieServiceJPA implements MovieService {
     private final MovieRepository movieRepository;
     public static final int DEFAULT_PAGE = 0;
     public static final int DEFAULT_PAGE_SIZE = 100;
+
+    /*
     @Override
     public List<Movie> listMovies(String movieTitle,
-                                  Double runtime,
+                                  double runtime,
                                   String language,
                                   String genre,
-                                  Boolean adult) {
+                                  boolean adult) {
 
 
         List<Movie> moviePage;
 
         if (StringUtils.hasText(movieTitle)) {
             moviePage = movieRepository.findAllByTitle(movieTitle);
-        } else if (runtime != null) {
+        } else if (runtime) {
             moviePage = movieRepository.findAllByRuntime(runtime);
         } else if (StringUtils.hasText(language)) {
             moviePage = movieRepository.findAllByOriginalLanguage(language);
@@ -42,10 +43,16 @@ public class MovieServiceJPA implements MovieService {
 
         return moviePage;
     }
+     */
 
     @Override
-    public Optional<Movie> getMovieById(Long id) {
-        return Optional.of(movieRepository.findById(id)).orElse(null);
+    public List<Movie> listMovies() {
+        return movieRepository.findAll();
+    }
+
+    @Override
+    public Optional<Movie> getMovieById(Long id) throws HttpNotFoundException {
+        return Optional.ofNullable(movieRepository.findById(id).orElseThrow(HttpNotFoundException::new));
     }
 
     @Override
@@ -56,10 +63,11 @@ public class MovieServiceJPA implements MovieService {
     @Override
     public Optional<Movie> updateMovieById(Long id, Movie movie) {
 
-        AtomicReference<Optional<Movie>> atomicMovie = new AtomicReference<>();
+        var foundMovie = movieRepository.findById(id).orElse(null);
 
-        movieRepository.findById(id).ifPresentOrElse(foundMovie -> {
-
+        if (foundMovie == null) {
+            return Optional.empty();
+        }else {
             foundMovie.setTitle(movie.getTitle());
             foundMovie.setOriginalTitle(movie.getOriginalTitle());
             foundMovie.setOverview(movie.getOverview());
@@ -76,17 +84,13 @@ public class MovieServiceJPA implements MovieService {
             foundMovie.setHomepage(movie.getHomepage());
             foundMovie.setImdbId(movie.getImdbId());
             foundMovie.setProductionCompanies(movie.getProductionCompanies());
-            foundMovie.setVideo(movie.getVideo());
-            foundMovie.setAdult(movie.getAdult());
+            foundMovie.setAdult(movie.isAdult());
 
             movieRepository.save(foundMovie);
+        }
 
-            atomicMovie.set(Optional.of(foundMovie));
-        }, () -> {
-            atomicMovie.set(Optional.empty());
-        });
+        return Optional.of(foundMovie);
 
-        return atomicMovie.get();
     }
 
     @Override

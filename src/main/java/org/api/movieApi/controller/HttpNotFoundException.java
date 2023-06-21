@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Value Not Found")
-public class HttpNotFoundException extends RuntimeException {
+public class HttpNotFoundException extends Exception {
     public HttpNotFoundException() {
     }
 

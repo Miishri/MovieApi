@@ -27,7 +27,7 @@ class MovieControllerIT {
     WebApplicationContext wac;
 
     @Test
-    void getMovieById() {
+    void getMovieById() throws HttpNotFoundException {
         Movie movie = movieRepository.findAll().get(0);
 
         Movie foundMovie = movieController.getMovieById(movie.getId());
@@ -49,27 +49,21 @@ class MovieControllerIT {
                 .originalTitle("kiwi lovers")
                 .build();
 
-        ResponseEntity response = movieController.saveNewMovie(testMovie);
+        Movie movie = movieController.saveNewMovie(testMovie);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(201));
-        assertThat(response.getHeaders().getLocation()).isNotNull();
-
-        String[] id = response.getHeaders().getLocation().getPath().split("/");
-        Long savedId = Long.valueOf(id[3]);
-
-        Movie movie = movieRepository.findById(savedId).get();
+        assertThat(movie.getOriginalTitle()).isEqualTo(testMovie.getOriginalTitle());
         assertThat(movie).isNotNull();
     }
 
     @Test
     @Transactional
     @Rollback
-    void updateMovieById() {
+    void updateMovieById() throws HttpNotFoundException {
         Movie movie = movieRepository.findAll().get(0);
         final String movieTitle = "UPDATED";
         movie.setTitle(movieTitle);
 
-        ResponseEntity response = movieController.updateMovieById(movie.getId(), movie);
+        ResponseEntity<Movie> response = movieController.updateMovieById(movie.getId(), movie);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
 
         Movie updatedMovie = movieRepository.findById(movie.getId()).get();
@@ -86,10 +80,10 @@ class MovieControllerIT {
     @Test
     @Transactional
     @Rollback
-    void deleteMovieById() {
+    void deleteMovieById() throws HttpNotFoundException {
         Movie movie = movieRepository.findAll().get(0);
 
-        ResponseEntity response = movieController.deleteMovieById(movie.getId());
+        ResponseEntity<Void> response = movieController.deleteMovieById(movie.getId());
         assertThat(response.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
 
         assertThat(movieRepository.findById(movie.getId())).isEmpty();

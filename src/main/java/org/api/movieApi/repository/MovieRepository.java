@@ -9,9 +9,9 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
 
     List<Movie> findAllByTitle(String title);
 
-    List<Movie> findAllByRuntime(Double runtime);
+    List<Movie> findAllByRuntime(double runtime);
 
     List<Movie> findAllByOriginalLanguage(String originalLanguage);
 
-    List<Movie> findAllByAdult(Boolean adult);
+    List<Movie> findAllByAdult(boolean adult);
 }

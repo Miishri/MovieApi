@@ -28,7 +28,7 @@ public class Movie {
 
     private String releaseDate;
 
-    private Double runtime;
+    private double runtime;
 
     private String originalLanguage;
 
@@ -40,7 +40,7 @@ public class Movie {
 
     private Integer voteCount;
 
-    private Integer budget;
+    private int budget;
 
     private Long revenue;
 
@@ -51,8 +51,6 @@ public class Movie {
     @Column(length = 1500)
     private String productionCompanies;
 
-    private Boolean video;
-
-    private Boolean adult;
+    private boolean adult;
 
 }

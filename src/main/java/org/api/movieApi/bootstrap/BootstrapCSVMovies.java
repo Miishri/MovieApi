@@ -53,7 +53,6 @@ public class BootstrapCSVMovies implements CommandLineRunner {
                         .revenue(movieCSV.getRevenue())
                         .homepage(movieCSV.getHomepage())
                         .imdbId(movieCSV.getImdbId())
-                        .video(movieCSV.getVideo())
                         .adult(movieCSV.getAdult())
                         .build();
 
