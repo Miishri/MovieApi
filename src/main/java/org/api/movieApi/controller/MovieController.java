@@ -26,10 +26,12 @@ public class MovieController {
         return movieService.getMovieById(movieId).orElseThrow(HttpNotFoundException::new);
     }
 
+    @GetMapping
     public List<Movie> listMovies() {
         return movieService.listMovies();
     }
 
+    @PostMapping
     public Movie saveNewMovie(@RequestBody Movie movie) {
         return movieService.saveNewMovie(movie);
     }
