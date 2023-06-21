@@ -15,13 +15,11 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/movie")
 public class MovieController {
-
-    public static final String PATH = "/api/movie";
-    public static final String ID_PATH = PATH +  "/{movieId}";
+    public static final String ID_PATH = "/{movieId}";
 
     private final MovieService movieService;
 
-    @GetMapping(value = ID_PATH)
+    @GetMapping(value = "/{movieId}")
     public Movie getMovieById(@PathVariable("movieId") Long movieId) throws HttpNotFoundException {
         return movieService.getMovieById(movieId).orElseThrow(HttpNotFoundException::new);
     }
@@ -36,7 +34,7 @@ public class MovieController {
         return movieService.saveNewMovie(movie);
     }
 
-    @PutMapping(value = ID_PATH)
+    @PutMapping(value = ID_PATH )
     public ResponseEntity<Movie> updateMovieById(@PathVariable("movieId") Long movieId, @RequestBody Movie movie) throws HttpNotFoundException {
         Optional<Movie> foundMovie = movieService.updateMovieById(movieId, movie);
 
