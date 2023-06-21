@@ -14,36 +14,6 @@ import java.util.Optional;
 public class MovieServiceJPA implements MovieService {
 
     private final MovieRepository movieRepository;
-    public static final int DEFAULT_PAGE = 0;
-    public static final int DEFAULT_PAGE_SIZE = 100;
-
-    /*
-    @Override
-    public List<Movie> listMovies(String movieTitle,
-                                  double runtime,
-                                  String language,
-                                  String genre,
-                                  boolean adult) {
-
-
-        List<Movie> moviePage;
-
-        if (StringUtils.hasText(movieTitle)) {
-            moviePage = movieRepository.findAllByTitle(movieTitle);
-        } else if (runtime) {
-            moviePage = movieRepository.findAllByRuntime(runtime);
-        } else if (StringUtils.hasText(language)) {
-            moviePage = movieRepository.findAllByOriginalLanguage(language);
-        } else if (adult != null) {
-            moviePage = movieRepository.findAllByAdult(adult);
-        } else {
-            moviePage = movieRepository.findAll();
-        }
-
-
-        return moviePage;
-    }
-     */
 
     @Override
     public List<Movie> listMovies() {

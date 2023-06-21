@@ -9,7 +9,6 @@ import java.util.Optional;
 
 public interface MovieService {
 
-    //List<Movie> listMovies(String movieTitle, double runtime, String originalLanguage, String genre, bo adult);
     List<Movie> listMovies();
 
     Optional<Movie> getMovieById(Long id) throws HttpNotFoundException;
