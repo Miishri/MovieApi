@@ -24,7 +24,7 @@ public class BootstrapCSVMovies implements CommandLineRunner {
 
     private final MovieRepository movieRepository;
     private final MovieCsvService service;
-    private ObjectMapper objectMapper;
+
     @Transactional
     @Override
     public void run(String... args) throws Exception {
@@ -69,31 +69,31 @@ public class BootstrapCSVMovies implements CommandLineRunner {
     }
 
     public String jsonProductionCompanyToString(String companyJson) {
-        return getString(companyJson);
+        return jsonToString(companyJson);
     }
 
     public String jsonGenreToPojo(String genreJson) {
-        return getString(genreJson);
+        return jsonToString(genreJson);
     }
 
-    private String getString(String genreJson) {
-        objectMapper = new ObjectMapper();
+    private String jsonToString(String json) {
+        ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
 
         try {
-            JsonNode jsonNode = objectMapper.readTree(genreJson);
-            StringBuilder genre = new StringBuilder();
-            for (JsonNode genreNode : jsonNode) {
-                genre.append(genreNode.get("name").asText());
-                genre.append(",");
+            JsonNode jsonNode = objectMapper.readTree(json);
+            StringBuilder string = new StringBuilder();
+            for (JsonNode node : jsonNode) {
+                string.append(node.get("name").asText());
+                string.append(",");
             }
-            if (!genre.isEmpty()) {
-                genre.delete(genre.length()-1, genre.length());
+            if (!string.isEmpty()) {
+                string.delete(string.length()-1, string.length());
             }else {
-                genre.append("None");
+                string.append("None");
             }
 
-            return genre.toString();
+            return string.toString();
 
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
