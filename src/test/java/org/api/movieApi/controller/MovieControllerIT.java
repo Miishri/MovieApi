@@ -37,7 +37,7 @@ class MovieControllerIT {
 
     @Test
     void testGetMovieByIdNotFound() {
-        assertThrows(NotFoundException.class, () -> {
+        assertThrows(HttpNotFoundException.class, () -> {
             movieController.getMovieById(999999999L);
         });
     }
@@ -78,7 +78,7 @@ class MovieControllerIT {
 
     @Test
     void testUpdateMovieByIdNotFound() {
-        assertThrows(NotFoundException.class, () -> {
+        assertThrows(HttpNotFoundException.class, () -> {
            movieController.updateMovieById(999999999L, Movie.builder().build());
         });
     }
@@ -97,7 +97,7 @@ class MovieControllerIT {
 
     @Test
     void testDeleteMovieByIdNotFound() {
-        assertThrows(NotFoundException.class, () -> {
+        assertThrows(HttpNotFoundException.class, () -> {
             movieController.deleteMovieById(999999999L);
         });
     }

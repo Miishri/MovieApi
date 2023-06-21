@@ -22,7 +22,7 @@ public class MovieController {
 
     @GetMapping(value = ID_PATH)
     public Movie getMovieById(@PathVariable("movieId") Long movieId) {
-        return movieService.getMovieById(movieId).orElseThrow(NotFoundException::new);
+        return movieService.getMovieById(movieId).orElseThrow(HttpNotFoundException::new);
     }
 
     @GetMapping(value = PATH)
@@ -45,7 +45,7 @@ public class MovieController {
     @PutMapping(value = ID_PATH)
     public ResponseEntity updateMovieById(@PathVariable("movieId") Long movieId, @RequestBody Movie movie) {
         if (movieService.updateMovieById(movieId, movie).isEmpty()) {
-            throw new NotFoundException();
+            throw new HttpNotFoundException();
         }
 
         return new ResponseEntity(HttpStatus.NO_CONTENT);
@@ -54,7 +54,7 @@ public class MovieController {
     @DeleteMapping(value = ID_PATH)
     public ResponseEntity deleteMovieById(@PathVariable("movieId") Long movieId) {
         if (! movieService.deleteById(movieId)) {
-            throw new NotFoundException();
+            throw new HttpNotFoundException();
         }
 
         return new ResponseEntity(HttpStatus.NO_CONTENT);
