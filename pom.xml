@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>org.api</groupId>
-	<artifactId>movieApi</artifactId>
+	<artifactId>movieapi</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>movies</name>
 	<description>Api for 35,000 + movies</description>
