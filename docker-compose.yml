@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  movieapi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - 8000:8000
+    volumes:
+      - movieapi-data:/app/data
+    environment:
+      - SPRING_PROFILES_ACTIVE=production
+
+volumes:
+  movieapi-data:
