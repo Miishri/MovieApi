@@ -3,13 +3,13 @@ package org.api.movieApi.services;
 
 import org.api.movieApi.controller.HttpNotFoundException;
 import org.api.movieApi.entities.Movie;
+import org.springframework.data.domain.Page;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface MovieService {
 
-    List<Movie> listMovies();
+    Page<Movie> listMovies(Integer pageNumber, Integer pageSize);
 
     Optional<Movie> getMovieById(Long id) throws HttpNotFoundException;
 

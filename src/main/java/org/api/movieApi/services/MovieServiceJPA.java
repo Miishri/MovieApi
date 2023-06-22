@@ -4,9 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.api.movieApi.controller.HttpNotFoundException;
 import org.api.movieApi.entities.Movie;
 import org.api.movieApi.repository.MovieRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -14,10 +16,36 @@ import java.util.Optional;
 public class MovieServiceJPA implements MovieService {
 
     private final MovieRepository movieRepository;
+    private static final int DEFAULT_PAGE = 0;
+    private static final int DEFAULT_PAGE_SIZE = 25;
 
     @Override
-    public List<Movie> listMovies() {
-        return movieRepository.findAll();
+    public Page<Movie> listMovies(Integer pageNumber, Integer pageSize) {
+        return movieRepository.findAll(buildPageRequest(pageNumber, pageSize));
+    }
+    public PageRequest buildPageRequest(Integer pageNumber, Integer pageSize) {
+        int queryPageNumber;
+        int queryPageSize;
+
+        if (pageNumber != null && pageNumber > 0) {
+            queryPageNumber = pageNumber - 1;
+        } else {
+            queryPageNumber = DEFAULT_PAGE;
+        }
+
+        if (pageSize == null) {
+            queryPageSize = DEFAULT_PAGE_SIZE;
+        } else {
+            if (pageSize > 1000) {
+                queryPageSize = 1000;
+            } else {
+                queryPageSize = pageSize;
+            }
+        }
+
+        Sort sort = Sort.by(Sort.Order.asc("title"));
+
+        return PageRequest.of(queryPageNumber, queryPageSize, sort);
     }
 
     @Override
