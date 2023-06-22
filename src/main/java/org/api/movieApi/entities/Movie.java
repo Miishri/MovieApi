@@ -20,7 +20,7 @@ public class Movie {
 
     private String originalTitle;
 
-    @Column(length = 1000)
+    @Column(length = 1500)
     private String overview;
 
     @Column(length = 1500)
